@@ -1,0 +1,67 @@
+ref: pagerduty.incident_find
+label: Incident Find
+description: find incident(s) by criteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  maximum:
+    type: integer
+    description: limit number of entries potentially returned
+    default: 25
+    minimum: 1
+  since:
+    type: string
+    description: The start of the date range over which you want to search. (ISO8601 compliant timestamp)
+  until:
+    type: string
+    description: The end of the date range over which you want to search. (ISO8601 compliant timestamp)
+  date_range:
+    type: string
+    description: When set to all, the since and until parameters and defaults are ignored.
+    enum:
+    - all
+  statuses:
+    type: array
+    description: Return only incidents with the given statuses.
+  incident_key:
+    type: string
+    description: Returns only the incident associated with this incident_key.
+  user_ids:
+    type: array
+    description: Returns only the incidents currently assigned to the passed user(s)
+  team_ids:
+    type: array
+    description: An array of team IDs. Only results related to these teams will be returned. Account must have the
+      teams ability to use this parameter.
+  urgencies:
+    type: string
+    description: Array of the urgencies of the incidents to be returned. Defaults to all urgencies. Account must
+      have the urgencies ability to do this.
+    enum:
+    - high
+    - low
+  time_zone:
+    type: string
+    description: Time zone in which dates in the result will be rendered.
+  include:
+    type: array
+    description: Array of additional details to include.
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

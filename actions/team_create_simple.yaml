@@ -1,0 +1,39 @@
+ref: pagerduty.team_create_simple
+label: Team Create Simple
+description: create a team (simplified)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  type:
+    type: string
+    default: team
+    enum:
+    - team
+    - team_reference
+    required: true
+  name:
+    type: string
+    description: The name of the team.
+    required: true
+  description:
+    type: string
+    description: The description of the team.
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

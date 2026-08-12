@@ -1,0 +1,134 @@
+ref: pagerduty.incident_create_rest_v2
+label: Incident Create Rest V2
+description: create an incident using the v2 REST API (raw data input)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  from_email:
+    type: string
+    description: The email address of a valid user associated with the account making the request.
+    required: true
+  data:
+    type: object
+    description: A JSON object with the data that should be sent for incident creation. See action definition for
+      details (JSONSchema).
+    properties:
+      type:
+        type: string
+        default: incident
+        enum:
+        - incident
+      title:
+        type: string
+        description: A succinct description of the nature, symptoms, cause, or effect of the incident.
+      urgency:
+        type: string
+        description: The urgency of the incident
+        enum:
+        - high
+        - low
+      incident_key:
+        type: string
+        description: A string which identifies the incident. Sending subsequent requests referencing the same service
+          and with the same incident_key will result in those requests being rejected if an open incident matches
+          that incident_key.
+      service:
+        type: object
+        description: The incident will be created on this service.
+        properties:
+          id:
+            type: string
+            description: service id
+          type:
+            type: string
+            description: the type of the service
+            default: service_reference
+            enum:
+            - service
+            - service_reference
+        required:
+        - id
+        - type
+      priority:
+        type: object
+        description: The priority of this incident.
+        properties:
+          id:
+            type: string
+            description: priority id
+          type:
+            type: string
+            description: the type of the priority
+            enum:
+            - priority
+            - priority_reference
+        required:
+        - id
+        - type
+      body:
+        type: object
+        description: A JSON object containing data describing the incident.
+        properties:
+          type:
+            type: string
+            default: incident_body
+            enum:
+            - incident_body
+          details:
+            type: string
+            description: Additional incident details.
+      assignments:
+        type: array
+        description: Assign the incident to these assignees. Cannot be specified if an escalation policy is given.
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: user id
+            type:
+              type: string
+              description: the type of the user
+              enum:
+              - user
+              - user_reference
+          required:
+          - id
+          - type
+      escalation_policy:
+        type: object
+        description: Delegate this incident to the specified escalation policy. Cannot be specified if an assignee
+          is given.
+        properties:
+          id:
+            type: string
+            description: escalation_policy id
+          type:
+            type: string
+            description: the type of the escalation_policy
+            enum:
+            - escalation_policy
+            - escalation_policy_reference
+        required:
+        - id
+        - type
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

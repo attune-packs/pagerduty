@@ -1,0 +1,47 @@
+ref: pagerduty.maintenance_window_find
+label: Maintenance Window Find
+description: find maintenance_window by criteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  team_ids:
+    type: array
+    description: An array of team IDs. Only results related to these teams will be returned. Account must have the
+      teams ability to use this parameter.
+  service_ids:
+    type: array
+    description: An array of service IDs. Only results related to these services will be returned.
+  include:
+    type: array
+    description: Array of additional details to include.
+  filter:
+    type: string
+    description: Only return maintenance windows in a given state.
+    enum:
+    - past
+    - future
+    - ongoing
+    - open
+    - all
+  query:
+    type: string
+    description: a substring search of the 'description' field
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

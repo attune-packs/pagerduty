@@ -1,0 +1,47 @@
+ref: pagerduty.user_create_notification_rule_simple
+label: User Create Notification Rule Simple
+description: create a notification_rule for user by entity_id (simplified)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  entity_id:
+    type: string
+    description: translates to the 'id' key for a user object in PagerDuty
+    required: true
+  start_delay_in_minutes:
+    type: integer
+    description: The delay before firing the rule, in minutes.
+    default: 0
+    required: true
+  contact_method_id:
+    type: string
+    description: id of the contact_method to be used
+    required: true
+  contact_method_type:
+    type: string
+    description: The type of contact method
+    enum:
+    - email_contact_method
+    - phone_contact_method
+    - push_notification_contact_method
+    - sms_contact_method
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

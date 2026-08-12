@@ -1,0 +1,42 @@
+ref: pagerduty.log_entry_find
+label: Log Entry Find
+description: find log_entry(s) by creiteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  include:
+    type: array
+    description: Array of additional details to include.
+  time_zone:
+    type: string
+    description: Time zone in which dates in the result will be rendered.
+    default: UTC
+  is_overview:
+    type: boolean
+    description: If true, will return a subset of log entries that show only the most important changes to the incident.
+    default: false
+  since:
+    type: string
+    description: The start of the date range over which you want to search. (ISO8601 compliant timestamp)
+  until:
+    type: string
+    description: The end of the date range over which you want to search. (ISO8601 compliant timestamp)
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

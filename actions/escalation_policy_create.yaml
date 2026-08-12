@@ -1,0 +1,103 @@
+ref: pagerduty.escalation_policy_create
+label: Escalation Policy Create
+description: create an escalation_policy
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  from_email:
+    type: string
+    description: The email address of a valid user associated with the account making the request.
+    required: true
+  data:
+    type: object
+    description: A JSON object with the data that should be sent for escalation_policy creation. See action definition
+      for details (JSONSchema).
+    properties:
+      type:
+        type: string
+        default: escalation_policy
+        enum:
+        - escalation_policy
+        - escalation_policy_reference
+      name:
+        type: string
+        description: The name of the escalation_policy.
+      description:
+        type: string
+        description: Escalation policy description.
+      num_loops:
+        type: integer
+        description: The number of times the escalation policy will repeat after reaching the end of its escalation.
+      repeat_enabled:
+        type: boolean
+        description: Whether or not to allow this policy to repeat its escalation rules after the last rule is finished.
+      escalation_rules:
+        type: array
+        description: list of escalation rules in this escalation policy
+        items:
+          type: object
+          properties:
+            escalation_delay_in_minutes:
+              type: integer
+              description: The number of minutes before an unacknowledged incident escalates away from this rule.
+            targets:
+              type: array
+              description: The targets an incident should be assigned to upon reaching this rule.
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: escalation target id
+                  type:
+                    type: string
+                    description: the type of the escalation target
+                    enum:
+                    - user
+                    - schedule
+                    - user_reference
+                    - schedule_reference
+                required:
+                - id
+                - type
+          required:
+          - escalation_delay_in_minutes
+          - targets
+      services:
+        type: array
+        description: Services associated with the policy
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: service id
+            type:
+              type: string
+              description: the type of the service
+              enum:
+              - service
+              - service_reference
+      teams:
+        type: array
+        description: Teams associated with the policy. Account must have the `teams` ability to use this parameter.
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

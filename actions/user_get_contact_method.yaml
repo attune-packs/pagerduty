@@ -1,0 +1,33 @@
+ref: pagerduty.user_get_contact_method
+label: User Get Contact Method
+description: get contact_methods for user by entity_id
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  entity_id:
+    type: string
+    description: translates to the 'id' key for a user object in PagerDuty
+    required: true
+  resource_id:
+    type: string
+    description: translates to the 'id' key for a contact_method object in PagerDuty
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

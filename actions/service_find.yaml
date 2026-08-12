@@ -1,0 +1,38 @@
+ref: pagerduty.service_find
+label: Service Find
+description: find service by criteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  time_zone:
+    type: string
+    description: Time zone in which dates in the result will be rendered.
+    default: UTC
+  include:
+    type: array
+    description: Array of additional details to include.
+  team_ids:
+    type: array
+    description: array of team ids to narrow search to
+  query:
+    type: string
+    description: a substring search of the 'name' and 'service_key' field
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

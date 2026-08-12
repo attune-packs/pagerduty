@@ -1,0 +1,52 @@
+ref: pagerduty.on_call_find
+label: On Call Find
+description: find on_call(s) by criteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  time_zone:
+    type: string
+    description: Time zone in which dates in the result will be rendered.
+    default: UTC
+  include:
+    type: array
+    description: Array of additional details to include.
+  user_ids:
+    type: array
+    description: array of user ids to narrow search to
+  escalation_policy_ids:
+    type: array
+    description: Filters the results, showing only on-calls for the specified escalation policy IDs.
+  schedule_ids:
+    type: array
+    description: Filters the results, showing only on-calls for the specified schedule IDs. If null is provided
+      in the array, it includes permanent on-calls due to direct user escalation targets.
+  since:
+    type: string
+    description: The start of the date range over which you want to search. (ISO8601 compliant timestamp)
+  until:
+    type: string
+    description: The end of the date range over which you want to search. (ISO8601 compliant timestamp)
+  earliest:
+    type: boolean
+    description: This will filter on-calls such that only the earliest on-call for each combination of escalation
+      policy, escalation level, and user is returned
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

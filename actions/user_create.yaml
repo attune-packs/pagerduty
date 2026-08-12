@@ -1,0 +1,103 @@
+ref: pagerduty.user_create
+label: User Create
+description: create a user (raw data input)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  from_email:
+    type: string
+    description: The email address of a valid user associated with the account making the request.
+    required: true
+  data:
+    type: object
+    description: A JSON object with the data that should be sent for user creation. See action definition for details
+      (JSONSchema).
+    properties:
+      type:
+        type: string
+        default: user
+        enum:
+        - user
+        - user_reference
+      name:
+        type: string
+        description: The name of the user.
+      email:
+        type: string
+        description: The user's email address.
+      time_zone:
+        type: string
+        description: The preferred time zone name. If null, the account's time zone will be used.
+      color:
+        type: string
+        description: The color this user will appear as on schedules.
+        enum:
+        - purple
+        - red
+        - green
+        - blue
+        - teal
+        - orange
+        - brown
+        - turquoise
+        - dark-slate-blue
+        - cayenne
+        - orange-red
+        - dark-orchid
+        - dark-slate-grey
+        - lime
+        - dark-magenta
+        - lime-green
+        - midnight-blue
+        - deep-pink
+        - dark-green
+        - dark-orange
+        - dark-cyan
+        - darkolive-green
+        - dark-slate-gray
+        - grey20
+        - firebrick
+        - maroon
+        - crimson
+        - dark-red
+        - dark-goldenrod
+        - chocolate
+        - medium-violet-red
+        - sea-green
+        - olivedrab
+        - forest-green
+        - dark-olive-green
+        - blue-violet
+        - royal-blue
+        - indigo
+        - slate-blue
+        - saddle-brown
+        - steel-blue
+      role:
+        type: string
+        description: The user's role (as defined in PagerDuty)
+      description:
+        type: string
+        description: The user's bio.
+      job_title:
+        type: string
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

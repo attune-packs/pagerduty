@@ -1,0 +1,46 @@
+ref: pagerduty.notification_find
+label: Notification Find
+description: find notifications by criteria
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  include:
+    type: array
+    description: Array of additional details to include.
+  time_zone:
+    type: string
+    description: Time zone in which dates in the result will be rendered.
+    default: UTC
+  since:
+    type: string
+    description: The start of the date range over which you want to search. (ISO8601 compliant timestamp)
+  until:
+    type: string
+    description: The end of the date range over which you want to search. (ISO8601 compliant timestamp)
+  filter:
+    type: string
+    description: Return notification of this type only
+    enum:
+    - sms_notification
+    - email_notification
+    - phone_notification
+    - push_notification
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

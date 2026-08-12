@@ -1,0 +1,46 @@
+ref: pagerduty.maintenance_window_create_simple
+label: Maintenance Window Create Simple
+description: create an maintenance_window (simplified)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  from_email:
+    type: string
+    description: The email address of a valid user associated with the account making the request.
+    required: true
+  start_time:
+    type: string
+    description: This maintenance window's start time. This is when the services will stop creating incidents. If
+      this date is in the past, it will be updated to be the current time. (ISO8601 compliant timestamp)
+    required: true
+  end_time:
+    type: string
+    description: This maintenance window's end time. This is when the services will start creating incidents again.
+      This date must be in the future and after the `start_time`. (ISO8601 compliant timestamp)
+    required: true
+  description:
+    type: string
+    description: A description for this maintenance window.
+  service_id:
+    type: string
+    description: Service id for the maintenance window.
+    required: true
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

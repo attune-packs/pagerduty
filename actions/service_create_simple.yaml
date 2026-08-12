@@ -1,0 +1,74 @@
+ref: pagerduty.service_create_simple
+label: Service Create Simple
+description: create a service (simplified)
+enabled: true
+runner_type: python
+runtime_version: '>=3.10'
+entry_point: pagerduty_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs:
+- standard
+parameters:
+  credential_key:
+    type: string
+    description: Attune Key containing PagerDuty credential settings
+    default: pagerduty.credentials
+    required: true
+  from_email:
+    type: string
+    description: The email address of a valid user associated with the account making the request.
+    required: true
+  type:
+    type: string
+    default: service
+    enum:
+    - service
+    - service_reference
+    required: true
+  name:
+    type: string
+    description: The name of the service.
+    required: true
+  description:
+    type: string
+    description: The user-provided description of the service.
+  auto_resolve_timeout:
+    type: integer
+    description: Time in seconds that an incident is automatically resolved if left open for that long (0 or null
+      = disable feature)
+    default: 14400
+  acknowledgement_timeout:
+    type: integer
+    description: Time in seconds that an incident changes to the Triggered State after being Acknowledged. (0 or
+      null = disable feature)
+    default: 1800
+  status:
+    type: string
+    description: The current state of the Service.
+    default: active
+    enum:
+    - active
+    - warning
+    - critical
+    - maintenance
+    - disabled
+  escalation_policy_id:
+    type: string
+    description: The ID of the escalation policy for this service
+    required: true
+  alert_creation:
+    type: string
+    description: Whether a service creates only incidents, or both alerts and incidents.
+    default: create_alerts_and_incidents
+    enum:
+    - create_incidents
+    - create_alerts_and_incidents
+output:
+  operation:
+    type: string
+    description: Executed PagerDuty operation
+  result:
+    type: any
+    description: PagerDuty resource object, collection, or operation result

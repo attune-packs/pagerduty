@@ -1,0 +1,9 @@
+This product includes an adaptation of the StackStorm Exchange PagerDuty pack,
+version 2.0.0, with upstream work attributed to Aamir, Jon Middleton, and Ian
+Price.
+
+Source: https://github.com/StackStorm-Exchange/stackstorm-pagerduty
+Revision: 4555dfc3f5fdbc1486503149c86392a1d5bf24b8
+License: Apache License 2.0
+
+The implementation and Attune component metadata have been modified.

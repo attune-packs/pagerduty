@@ -60,7 +60,7 @@ class MetadataContractTests(unittest.TestCase):
                 self.assertEqual("string", action["output"]["operation"]["type"])
                 self.assertEqual("any", action["output"]["result"]["type"])
                 credential = action["parameters"]["credential_key"]
-                self.assertEqual("pagerduty.credentials", credential["default"])
+                self.assertEqual("pack.pagerduty.credentials", credential["default"])
                 self.assertTrue(credential["required"])
 
     def test_schemas_are_flat_and_hide_source_dispatch_fields(self):
@@ -164,7 +164,10 @@ class ClientUnitTests(unittest.TestCase):
                 "attune.api_client.api.secrets": fake_secrets,
             }
             with self.subTest(value=key_value), mock.patch.dict(sys.modules, modules):
-                self.assertEqual({"api_token": "x"}, client._fetch_key("pagerduty.credentials"))
+                self.assertEqual({"api_token": "x"}, client._fetch_key("pack.pagerduty.credentials"))
+                fake_secrets.get_key.sync_detailed.assert_called_once_with(
+                    "pack.pagerduty.credentials", client=fake_attune.context.client
+                )
 
     def test_fetch_key_maps_lookup_failures_safely(self):
         fake_attune = types.ModuleType("attune")
@@ -181,6 +184,9 @@ class ClientUnitTests(unittest.TestCase):
         }
         with mock.patch.dict(sys.modules, modules), self.assertRaisesRegex(client.PagerDutyPackError, "not found"):
             client._fetch_key("missing")
+        fake_secrets.get_key.sync_detailed.assert_called_once_with(
+            "missing", client=fake_attune.context.client
+        )
 
     @mock.patch("requests.request")
     def test_rest_get_builds_auth_path_and_array_query(self, request):
@@ -281,7 +287,7 @@ class ClientUnitTests(unittest.TestCase):
     def test_execute_action_uses_default_credential_and_dispatches(self):
         with mock.patch.object(client, "_fetch_key", return_value={"api_token": "secret"}) as fetch, mock.patch.object(client, "_rest_request", return_value={"id": "U1"}) as rest:
             self.assertEqual({"id": "U1"}, client.execute_action("user_get", {"entity_id": "U1"}))
-        fetch.assert_called_once_with("pagerduty.credentials")
+        fetch.assert_called_once_with("pack.pagerduty.credentials")
         rest.assert_called_once_with("user_get", {"entity_id": "U1"}, {"api_token": "secret"})
 
     def test_validation_rejects_missing_fields_and_bad_collections(self):

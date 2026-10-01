@@ -103,7 +103,7 @@ def _fetch_key(ref: str) -> Dict[str, Any]:
     except ImportError as exc:
         raise PagerDutyPackError("attune-sdk is required to resolve credential_key") from exc
     try:
-        response = get_key.sync_detailed(ref, client=attune.context.client, decrypt=True)
+        response = get_key.sync_detailed(ref, client=attune.context.client)
     except Exception as exc:
         raise PagerDutyPackError(f"unable to read credential Key {ref!r}") from exc
     status = int(response.status_code)
@@ -300,7 +300,7 @@ def _create_event(params: Mapping[str, Any], config: Mapping[str, Any]) -> Dict[
 
 
 def execute_action(operation: str, params: Mapping[str, Any]) -> Any:
-    config = _fetch_key(str(params.get("credential_key", "pagerduty.credentials")))
+    config = _fetch_key(str(params.get("credential_key", "pack.pagerduty.credentials")))
     if operation == "incident_create_events_v1":
         return _create_event(params, config)
     if operation not in OPERATIONS:

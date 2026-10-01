@@ -14,7 +14,7 @@ parameters:
   credential_key:
     type: string
     description: Attune Key containing PagerDuty credential settings
-    default: pagerduty.credentials
+    default: pack.pagerduty.credentials
     required: true
   time_zone:
     type: string

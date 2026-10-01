@@ -8,7 +8,8 @@ Attune actions for PagerDuty REST API v2 and the legacy Events API v1, adapted f
 
 - Python 3.10 or newer and the dependencies in `requirements.txt` are available to the worker.
 - PagerDuty endpoints are reachable from the selected worker.
-- Create an Attune Key named `pagerduty.credentials`, or pass another ref as `credential_key`.
+- Create an Attune Key with local ref `credentials`, owner type `pack`, and `owner_pack_ref`
+  `pagerduty`. Pass its canonical ref, `pack.pagerduty.credentials`, as `credential_key`.
 - The Key value is a JSON object containing `api_token`; it may also contain `from_email`, `service_key`,
   `api_base_url`, `events_v1_url`, and `timeout_seconds`.
 - `api_base_url` and `events_v1_url` must use HTTPS. `timeout_seconds` must be from 1 through 300.
@@ -44,7 +45,7 @@ obsolete endpoint is retained rather than silently changing to Events API v2. `t
 
 | Source | Attune target | Fidelity | Important differences | Follow-up |
 |---|---|---|---|---|
-| Manifest, config schema, and example config | `pack.yaml` and `pagerduty.credentials` Key | adapted | Canonical Attune metadata; secrets moved from config to a scoped encrypted Key; unsafe sample values omitted | Create the Key after installation |
+| Manifest, config schema, and example config | `pack.yaml` and `pack.pagerduty.credentials` Key | adapted | Canonical Attune metadata; secrets moved from config to a scoped encrypted Key; unsafe sample values omitted | Create the Key after installation |
 | `actions/action.py` and `actions/lib/base.py` | `actions/pagerduty_action.py` and `lib/pagerduty_client.py` | adapted | Explicit stateless HTTP operations replace obsolete `pypd` globals; bounded timeout; no retries; safe errors | Integration-test against the target PagerDuty account |
 | 64 REST action definitions | 64 action YAML files listed below | adapted | Dotted refs become underscore refs; output uses a stable envelope; schemas correct malformed source object definitions | Validate account-specific API permissions and current PagerDuty fields |
 | `incident.create.events_v1` | `pagerduty.incident_create_events_v1` | partial | Legacy Events v1 is retained; it is not equivalent to Events API v2 and remains trigger-only | Migrate callers to a separately designed Events v2 action |
